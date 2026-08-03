@@ -21,7 +21,7 @@ export default function GoalScreen() {
     setGoalInches(inches);
     setGoalSet(true);
 
-    router.replace("/dashboard");
+    router.replace("/(tabs)/dashboard");
   }
 
   function saveCustomGoal() {

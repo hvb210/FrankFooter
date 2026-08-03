@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { useRouter } from "expo-router";
 import { useApp } from "@/context/AppContext";
+import { useRouter } from "expo-router";
+import { landmarks } from "@/data/landmarks";
+import { achievements } from "@/data/achievements";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -15,7 +17,32 @@ export default function DashboardScreen() {
   1
   );
 
-const progressPercent = (progress * 100).toFixed(2);
+  const progressPercent = (progress * 100).toFixed(2);
+
+  const landmarksCompleted = landmarks.filter(
+  (landmark) => landmark.feet * 12 <= totalInches
+).length;
+
+const badges = achievements.map((achievement) => ({
+  ...achievement,
+  unlocked: landmarksCompleted >= achievement.threshold,
+}));
+
+  const nextLandmark = landmarks.find(
+    (landmark) => landmark.feet * 12 > totalInches
+  );
+
+  const landmarkRemainingInches = nextLandmark
+    ? nextLandmark.feet * 12 - totalInches
+    : 0;
+
+  const landmarkRemainingFeet = Math.floor(
+    landmarkRemainingInches / 12
+  );
+
+  const landmarkRemainingExtraInches = Math.round(
+    landmarkRemainingInches % 12
+  );
 
   return (
     <View style={styles.container}>
@@ -33,7 +60,7 @@ const progressPercent = (progress * 100).toFixed(2);
 
       <Pressable
         style={styles.secondaryButton}
-        onPress={() => router.push("/goal")}
+        onPress={() => router.push("/(tabs)/goal")}
         >
         <Text style={styles.secondaryButtonText}>
         Change Goal
@@ -62,21 +89,58 @@ const progressPercent = (progress * 100).toFixed(2);
         </Text>
 
       <Text style={styles.label}>
-        Next Landmark
+        Next Bite
       </Text>
 
       <Text style={styles.value}>
-        Start eating to unlock achievements!
+        {nextLandmark
+          ? `${nextLandmark.name}: (${landmarkRemainingFeet} feet ${landmarkRemainingExtraInches} inches to go)`
+          : "You've eaten a mile of hot dogs!"}
       </Text>
 
-      <Pressable
-        style={styles.button}
-        onPress={() => router.push("/log")}
-      >
-        <Text style={styles.buttonText}>
-          Log a Hot Dog 🌭
-        </Text>
-      </Pressable>
+      <Text style={styles.label}>
+        Achievements
+      </Text>
+
+      <View style={styles.badgeRow}>
+        {badges.map((badge) => (
+          <AchievementBadge
+          key={badge.id}
+          name={badge.name}
+          description={badge.description}
+          icon={badge.icon}
+          unlocked={badge.unlocked}
+          />
+        ))}
+      </View>
+
+    </View>
+  );
+}
+
+function AchievementBadge({
+  name,
+  description,
+  icon,
+  unlocked,
+}: {
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+}) {
+  return (
+    <View
+      style={[
+        styles.badge,
+        !unlocked && styles.lockedBadge,
+      ]}
+    >
+      <Text style={styles.badgeIcon}>{icon}</Text>
+      <Text style={styles.badgeName}>{name}</Text>
+      <Text style={styles.badgeDescription}>
+        {unlocked ? description : "Locked"}
+      </Text>
     </View>
   );
 }
@@ -146,5 +210,37 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18,
     fontWeight: "bold",
+  },
+
+  badgeRow: {
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  marginTop: 10,
+},
+
+  badge: {
+    alignItems: "center",
+    width: 90,
+    margin: 8,
+  },
+
+  lockedBadge: {
+    opacity: 0.35,
+  },
+
+  badgeIcon: {
+    fontSize: 32,
+  },
+
+  badgeName: {
+    fontSize: 12,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  badgeDescription: {
+    fontSize: 10,
+    textAlign: "center",
   },
 });

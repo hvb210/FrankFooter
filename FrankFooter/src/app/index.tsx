@@ -10,7 +10,7 @@ export default function HomeScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (goalSet) {
-        router.replace("/dashboard");
+        router.replace("/(tabs)/dashboard");
       } else {
         router.replace("/goal");
       }

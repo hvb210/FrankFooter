@@ -3,6 +3,7 @@ import { hotdogs } from "@/data/hotdogs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface LogEntry {
+  id: string;
   productId: number;
   quantity: number;
   inchesAdded: number;
@@ -21,9 +22,13 @@ interface AppContextType {
   logEntries: LogEntry[];
 
   addHotDogs: (
-  productId: number,
-  quantity: number
-) => void;
+    productId: number,
+    quantity: number
+  ) => void;
+
+  deleteLogEntry: (
+    id: string
+  ) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,9 +43,11 @@ export function AppProvider({
   const [totalInches, setTotalInches] = useState(0);
   const [logEntries, setLogEntries] = useState<LogEntry[]>([]);
 
+
   useEffect(() => {
   async function loadData() {
     try {
+
       const savedGoal = await AsyncStorage.getItem("goalInches");
       const savedGoalSet = await AsyncStorage.getItem("goalSet");
       const savedTotal = await AsyncStorage.getItem("totalInches");
@@ -59,8 +66,15 @@ export function AppProvider({
       }
 
       if (savedLogs) {
-        setLogEntries(JSON.parse(savedLogs));
-      }
+        const parsedLogs = JSON.parse(savedLogs);
+
+        const updatedLogs = parsedLogs.map((entry: LogEntry) => ({
+          ...entry,
+          id: entry.id ?? Date.now().toString(),
+        }));
+
+  setLogEntries(updatedLogs);
+}
     } catch (error) {
       console.log("Error loading data:", error);
     }
@@ -101,9 +115,9 @@ useEffect(() => {
 }, [goalInches, goalSet, totalInches, logEntries]);
 
   function addHotDogs(
-  productId: number,
-  quantity: number
-) {
+    productId: number,
+    quantity: number
+  ) {
 
   const product = hotdogs
     .flatMap((brand) => brand.products)
@@ -119,6 +133,7 @@ useEffect(() => {
     setTotalInches((current) => current + inchesAdded);
 
     const newEntry: LogEntry = {
+      id: Date.now().toString(),
       productId,
       quantity,
       inchesAdded,
@@ -127,6 +142,27 @@ useEffect(() => {
 
     setLogEntries((current) => [...current, newEntry]);
   }
+
+  function deleteLogEntry(id: string) {
+    const entry = logEntries.find(
+      (item) => item.id === id
+    );
+
+    if (!entry) {
+      return;
+    }
+
+    setTotalInches(
+      (current) => current - entry.inchesAdded
+    );
+
+    setLogEntries(
+      (current) =>
+        current.filter(
+          (item) => item.id !== id
+        )
+      );
+}
 
   return (
     <AppContext.Provider
@@ -138,6 +174,7 @@ useEffect(() => {
         totalInches,
         logEntries,
         addHotDogs,
+        deleteLogEntry,
       }}
     >
       {children}
