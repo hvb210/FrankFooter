@@ -1,39 +1,96 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  Keyboard,
+  TouchableWithoutFeedback
+} from "react-native";
 import { useRouter } from "expo-router";
+import { useApp } from "@/context/AppContext";
+import { useState } from "react";
 
 export default function GoalScreen() {
   const router = useRouter();
+  const { setGoalInches, setGoalSet, goalSet } = useApp();
+  const [customFeet, setCustomFeet] = useState("");
+  const [error, setError] = useState("");
+
+  function saveGoal(inches: number) {
+    setGoalInches(inches);
+    setGoalSet(true);
+
+    router.replace("/dashboard");
+  }
+
+  function saveCustomGoal() {
+    const feet = Number(customFeet);
+
+    if (feet > 5280) {
+      setError("Maximum goal is 1 mile (5,280 feet).");
+      return;
+    }
+
+    if (feet <= 0) {
+      setError("Please enter a distance greater than 0.");
+      return;
+    }
+
+    setError("");
+    saveGoal(feet * 12);
+  }
+
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Set Your Goal
-      </Text>
-
-      <Text style={styles.subtitle}>
-        How far do you want to eat?
-      </Text>
-
-      <Pressable
-        style={styles.goalButton}
-        onPress={() => router.push("/dashboard")}
-      >
-        <Text style={styles.goalText}>
-          1 Mile
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.title}>
+        {goalSet ? "Update Your Goal" : "Set Your Goal"}
         </Text>
-      </Pressable>
 
-      <Pressable
-        style={styles.goalButton}
-        onPress={() => router.push("/dashboard")}
-      >
-        <Text style={styles.goalText}>
-          Custom Goal
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
+        <Text style={styles.subtitle}>
+        {goalSet
+          ? "Choose a new distance"
+          : "How far do you want to eat?"}
+          </Text>
+
+          <Pressable
+          style={styles.goalButton}
+          onPress={() => saveGoal(63360)}
+          >
+          <Text style={styles.goalText}>
+            1 Mile
+            </Text>
+            </Pressable>
+
+            <TextInput
+            style={styles.input}
+            placeholder="Enter feet"
+            keyboardType="numeric"
+            value={customFeet}
+            onChangeText={setCustomFeet}
+            />
+
+            {error ? (
+              <Text style={styles.error}>
+              {error}
+              </Text>
+            ) : null}
+
+            <Pressable
+            style={styles.goalButton}
+            onPress={saveCustomGoal}
+            >
+            <Text style={styles.goalText}>
+            Save Custom Goal
+            </Text>
+            </Pressable>
+
+            </View>
+          </TouchableWithoutFeedback>
+        );
+      }
 
 const styles = StyleSheet.create({
   container: {
@@ -61,4 +118,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 12,
+    borderRadius: 10,
+    width: 200,
+    marginTop: 20,
+    textAlign: "center",
+    fontSize: 18,
+},
+
+  error: {
+    marginTop: 10,
+    fontSize: 14,
+    textAlign: "center",
+},
+
 });

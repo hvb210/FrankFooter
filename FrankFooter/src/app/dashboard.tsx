@@ -10,6 +10,13 @@ export default function DashboardScreen() {
   const feet = Math.floor(totalInches / 12);
   const remainingInches = (totalInches % 12).toFixed(1);
 
+  const progress = Math.min(
+  totalInches / goalInches,
+  1
+  );
+
+const progressPercent = (progress * 100).toFixed(2);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -24,6 +31,15 @@ export default function DashboardScreen() {
         {(goalInches / 63360).toFixed(1)} Mile Goal
       </Text>
 
+      <Pressable
+        style={styles.secondaryButton}
+        onPress={() => router.push("/goal")}
+        >
+        <Text style={styles.secondaryButtonText}>
+        Change Goal
+        </Text>
+      </Pressable>
+
       <Text style={styles.label}>
         Current Distance
       </Text>
@@ -31,6 +47,19 @@ export default function DashboardScreen() {
       <Text style={styles.value}>
         {feet} ft {remainingInches} in
       </Text>
+
+    <View style={styles.progressContainer}>
+      <View
+        style={[
+          styles.progressBar,
+          { width: `${progressPercent}%` },
+        ]}
+        />
+      </View>
+
+      <Text style={styles.progressText}>
+        {progressPercent}% complete
+        </Text>
 
       <Text style={styles.label}>
         Next Landmark
@@ -85,6 +114,36 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  secondaryButton: {
+  marginTop: 10,
+  },
+
+  secondaryButtonText: {
+    color: "#208AEF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  progressContainer: {
+  height: 20,
+  width: "80%",
+  backgroundColor: "#eee",
+  borderRadius: 10,
+  overflow: "hidden",
+  marginTop: 20,
+  },
+
+  progressBar: {
+    height: "100%",
+    backgroundColor: "#F5A623",
+  },
+
+  progressText: {
+    marginTop: 10,
     fontSize: 18,
     fontWeight: "bold",
   },

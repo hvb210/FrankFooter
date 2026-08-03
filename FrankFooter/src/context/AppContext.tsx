@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { hotdogs } from "@/data/hotdogs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface LogEntry {
   productId: number;
@@ -11,6 +12,9 @@ export interface LogEntry {
 interface AppContextType {
   goalInches: number;
   setGoalInches: (goal: number) => void;
+
+  goalSet: boolean;
+  setGoalSet: (value: boolean) => void;
 
   totalInches: number;
 
@@ -30,14 +34,77 @@ export function AppProvider({
   children: React.ReactNode;
 }) {
   const [goalInches, setGoalInches] = useState(63360); // 1 mile
+  const [goalSet, setGoalSet] = useState(false);
   const [totalInches, setTotalInches] = useState(0);
   const [logEntries, setLogEntries] = useState<LogEntry[]>([]);
+
+  useEffect(() => {
+  async function loadData() {
+    try {
+      const savedGoal = await AsyncStorage.getItem("goalInches");
+      const savedGoalSet = await AsyncStorage.getItem("goalSet");
+      const savedTotal = await AsyncStorage.getItem("totalInches");
+      const savedLogs = await AsyncStorage.getItem("logEntries");
+
+      if (savedGoal) {
+        setGoalInches(JSON.parse(savedGoal));
+      }
+
+      if (savedGoalSet) {
+        setGoalSet(JSON.parse(savedGoalSet));
+      }
+
+      if (savedTotal) {
+        setTotalInches(JSON.parse(savedTotal));
+      }
+
+      if (savedLogs) {
+        setLogEntries(JSON.parse(savedLogs));
+      }
+    } catch (error) {
+      console.log("Error loading data:", error);
+    }
+  }
+
+  loadData();
+}, []);
+
+useEffect(() => {
+  async function saveData() {
+    try {
+      await AsyncStorage.setItem(
+        "goalInches",
+        JSON.stringify(goalInches)
+      );
+
+      await AsyncStorage.setItem(
+        "goalSet",
+        JSON.stringify(goalSet)
+      );
+
+      await AsyncStorage.setItem(
+        "totalInches",
+        JSON.stringify(totalInches)
+      );
+
+      await AsyncStorage.setItem(
+        "logEntries",
+        JSON.stringify(logEntries)
+      );
+
+    } catch (error) {
+      console.log("Error saving data:", error);
+    }
+  }
+
+  saveData();
+}, [goalInches, goalSet, totalInches, logEntries]);
 
   function addHotDogs(
   productId: number,
   quantity: number
 ) {
-  
+
   const product = hotdogs
     .flatMap((brand) => brand.products)
     .find((product) => product.id === productId);
@@ -66,6 +133,8 @@ export function AppProvider({
       value={{
         goalInches,
         setGoalInches,
+        goalSet,
+        setGoalSet,
         totalInches,
         logEntries,
         addHotDogs,
