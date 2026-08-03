@@ -37,6 +37,7 @@ export function AppProvider({
   productId: number,
   quantity: number
 ) {
+  
   const product = hotdogs
     .flatMap((brand) => brand.products)
     .find((product) => product.id === productId);

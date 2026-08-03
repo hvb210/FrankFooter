@@ -1,8 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
-import { Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useRouter } from "expo-router";
+import { useApp } from "@/context/AppContext";
 
 export default function DashboardScreen() {
+  const router = useRouter();
+
+  const { totalInches, goalInches } = useApp();
+
+  const feet = Math.floor(totalInches / 12);
+  const remainingInches = (totalInches % 12).toFixed(1);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -14,7 +21,7 @@ export default function DashboardScreen() {
       </Text>
 
       <Text style={styles.value}>
-        1 Mile of Hot Dogs
+        {(goalInches / 63360).toFixed(1)} Mile Goal
       </Text>
 
       <Text style={styles.label}>
@@ -22,7 +29,7 @@ export default function DashboardScreen() {
       </Text>
 
       <Text style={styles.value}>
-        0 feet
+        {feet} ft {remainingInches} in
       </Text>
 
       <Text style={styles.label}>
@@ -34,19 +41,16 @@ export default function DashboardScreen() {
       </Text>
 
       <Pressable
-  style={styles.button}
-  onPress={() => router.push("/log")}
->
-  <Text style={styles.buttonText}>
-    Log a Hot Dog 🌭
-  </Text>
-</Pressable>
-
+        style={styles.button}
+        onPress={() => router.push("/log")}
+      >
+        <Text style={styles.buttonText}>
+          Log a Hot Dog 🌭
+        </Text>
+      </Pressable>
     </View>
   );
 }
-
-const router = useRouter();
 
 const styles = StyleSheet.create({
   container: {
@@ -55,15 +59,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
+
   title: {
     fontSize: 36,
     fontWeight: "bold",
     marginBottom: 40,
   },
+
   label: {
     fontSize: 18,
     marginTop: 20,
   },
+
   value: {
     fontSize: 24,
     fontWeight: "bold",
@@ -71,15 +78,14 @@ const styles = StyleSheet.create({
   },
 
   button: {
-  backgroundColor: "#F5A623",
-  padding: 15,
-  borderRadius: 25,
-  marginTop: 40,
-},
+    backgroundColor: "#F5A623",
+    padding: 15,
+    borderRadius: 25,
+    marginTop: 40,
+  },
 
-buttonText: {
-  fontSize: 18,
-  fontWeight: "bold",
-},
-
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });

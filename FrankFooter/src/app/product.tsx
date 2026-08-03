@@ -1,18 +1,20 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { hotdogs } from "@/data/hotdogs";
+import { useRouter } from "expo-router";
 
 export default function ProductScreen() {
-  const { brand } = useLocalSearchParams();
+  const { brandId } = useLocalSearchParams();
+  const router = useRouter();
 
   const selectedBrand = hotdogs.find(
-    (item) => item.name === brand
+    (item) => item.id === Number(brandId)
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        {brand}
+        {selectedBrand?.name}
       </Text>
 
       <Text style={styles.subtitle}>
@@ -21,9 +23,18 @@ export default function ProductScreen() {
 
       {selectedBrand?.products.map((product) => (
         <Pressable
-          key={product.id}
-          style={styles.hotdogButton}
-        >
+    key={product.id}
+    style={styles.hotdogButton}
+    onPress={() =>
+      router.push({
+        pathname: "/quantity",
+        params: {
+          productId: product.id,
+          productName: product.name,
+        },
+      })
+    }
+  >
           <Text style={styles.buttonText}>
             {product.name}
           </Text>
