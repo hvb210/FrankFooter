@@ -4,17 +4,22 @@ import { useLocalSearchParams, router } from "expo-router";
 import { useApp } from "@/context/AppContext";
 
 export default function QuantityScreen() {
-  const { productId, productName } = useLocalSearchParams();
+  const { productId, productName, length_inches } = useLocalSearchParams();
 
   const { addHotDogs } = useApp();
 
   const [quantity, setQuantity] = useState(1);
 
   function handleAdd() {
-    addHotDogs(Number(productId), quantity);
+   addHotDogs(
+     Number(productId),
+     quantity,
+     length_inches ? Number(length_inches) : undefined,
+     productName ? String(productName) : undefined
+   );
 
-    router.push("/dashboard");
-  }
+   router.push("/dashboard");
+ }
 
   return (
     <View style={styles.container}>

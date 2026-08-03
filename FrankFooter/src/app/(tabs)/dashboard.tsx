@@ -9,11 +9,13 @@ export default function DashboardScreen() {
 
   const { totalInches, goalInches } = useApp();
 
-  const feet = Math.floor(totalInches / 12);
-  const remainingInches = (totalInches % 12).toFixed(1);
+  const safeTotalInches = Math.max(0, totalInches);
+
+  const feet = Math.floor(safeTotalInches / 12);
+  const remainingInches = (safeTotalInches % 12).toFixed(1);
 
   const progress = Math.min(
-  totalInches / goalInches,
+  safeTotalInches / goalInches,
   1
   );
 
@@ -29,11 +31,11 @@ const badges = achievements.map((achievement) => ({
 }));
 
   const nextLandmark = landmarks.find(
-    (landmark) => landmark.feet * 12 > totalInches
+    (landmark) => landmark.feet * 12 > safeTotalInches
   );
 
   const landmarkRemainingInches = nextLandmark
-    ? nextLandmark.feet * 12 - totalInches
+    ? nextLandmark.feet * 12 - safeTotalInches
     : 0;
 
   const landmarkRemainingFeet = Math.floor(
@@ -60,7 +62,7 @@ const badges = achievements.map((achievement) => ({
 
       <Pressable
         style={styles.secondaryButton}
-        onPress={() => router.push("/(tabs)/goal")}
+        onPress={() => router.push("/goal")}
         >
         <Text style={styles.secondaryButtonText}>
         Change Goal

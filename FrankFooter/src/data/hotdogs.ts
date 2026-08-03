@@ -49,9 +49,5 @@ export const hotdogs: Brand[] = [
       },
     ],
   },
-  {
-    id: 999,
-    name: "Custom",
-    products: [],
-  },
+
 ];

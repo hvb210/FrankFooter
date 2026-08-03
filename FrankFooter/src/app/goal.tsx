@@ -13,13 +13,18 @@ import { useState } from "react";
 
 export default function GoalScreen() {
   const router = useRouter();
-  const { setGoalInches, setGoalSet, goalSet } = useApp();
+  const { setGoalInches, setGoalSet, goalSet, setStartingDistance } = useApp();
   const [customFeet, setCustomFeet] = useState("");
   const [error, setError] = useState("");
+  const [startingFeet, setStartingFeet] = useState("");
 
   function saveGoal(inches: number) {
     setGoalInches(inches);
     setGoalSet(true);
+
+    if (!goalSet && startingFeet) {
+      setStartingDistance(Number(startingFeet) * 12);
+    }
 
     router.replace("/(tabs)/dashboard");
   }
@@ -71,6 +76,21 @@ export default function GoalScreen() {
             value={customFeet}
             onChangeText={setCustomFeet}
             />
+      {!goalSet && (
+        <>
+          <Text style={styles.subtitle}>
+            Already have a hot dog history?
+          </Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Starting feet"
+            keyboardType="numeric"
+            value={startingFeet}
+            onChangeText={setStartingFeet}
+          />
+        </>
+      )}
 
             {error ? (
               <Text style={styles.error}>

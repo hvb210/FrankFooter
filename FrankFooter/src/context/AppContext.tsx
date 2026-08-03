@@ -4,7 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface LogEntry {
   id: string;
-  productId: number;
+  productId?: number;
+  productName?: string,
   quantity: number;
   inchesAdded: number;
   date: string;
@@ -21,14 +22,38 @@ interface AppContextType {
 
   logEntries: LogEntry[];
 
+  customHotDogs: CustomHotDog[];
+
+  addCustomHotDog: (
+    name: string,
+    length_inches: number
+  ) => void;
+
   addHotDogs: (
     productId: number,
-    quantity: number
+    quantity: number,
+    customLength?: number,
+    productName?: string
   ) => void;
 
   deleteLogEntry: (
     id: string
   ) => void;
+
+  deleteCustomHotDog: (
+    id: string
+  ) => void;
+
+  setStartingDistance: (
+    inches: number
+  ) => void;
+}
+
+
+interface CustomHotDog {
+  id: string;
+  name: string;
+  length_inches: number;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -42,6 +67,7 @@ export function AppProvider({
   const [goalSet, setGoalSet] = useState(false);
   const [totalInches, setTotalInches] = useState(0);
   const [logEntries, setLogEntries] = useState<LogEntry[]>([]);
+  const [customHotDogs, setCustomHotDogs] = useState<CustomHotDog[]>([]);
 
 
   useEffect(() => {
@@ -52,6 +78,7 @@ export function AppProvider({
       const savedGoalSet = await AsyncStorage.getItem("goalSet");
       const savedTotal = await AsyncStorage.getItem("totalInches");
       const savedLogs = await AsyncStorage.getItem("logEntries");
+      const savedCustomDogs = await AsyncStorage.getItem("customHotDogs");
 
       if (savedGoal) {
         setGoalInches(JSON.parse(savedGoal));
@@ -73,8 +100,13 @@ export function AppProvider({
           id: entry.id ?? Date.now().toString(),
         }));
 
-  setLogEntries(updatedLogs);
-}
+        setLogEntries(updatedLogs);
+      }
+
+      if (savedCustomDogs) {
+        setCustomHotDogs(JSON.parse(savedCustomDogs));
+      }
+
     } catch (error) {
       console.log("Error loading data:", error);
     }
@@ -106,41 +138,78 @@ useEffect(() => {
         JSON.stringify(logEntries)
       );
 
+      await AsyncStorage.setItem(
+        "customHotDogs",
+        JSON.stringify(customHotDogs)
+      );
+
     } catch (error) {
       console.log("Error saving data:", error);
     }
   }
 
   saveData();
-}, [goalInches, goalSet, totalInches, logEntries]);
+}, [goalInches, goalSet, totalInches, logEntries, customHotDogs]);
 
   function addHotDogs(
     productId: number,
-    quantity: number
+    quantity: number,
+    customLength?: number,
+    productName?: string
   ) {
 
-  const product = hotdogs
-    .flatMap((brand) => brand.products)
-    .find((product) => product.id === productId);
+    let inchesPerHotDog;
 
-  if (!product) {
-    return;
-  }
+    if (customLength) {
+      inchesPerHotDog = customLength;
+    } else {
+      const product = hotdogs
+      .flatMap((brand) => brand.products)
+      .find((product) => product.id === productId);
 
-  const inchesAdded = quantity * product.length_inches;
+      if (!product) {
+        return;
+      }
 
+      inchesPerHotDog = product.length_inches;
+    }
+
+    const inchesAdded = quantity * inchesPerHotDog;
 
     setTotalInches((current) => current + inchesAdded);
 
     const newEntry: LogEntry = {
       id: Date.now().toString(),
-      productId,
+      productId: customLength ? undefined : productId,
+      productName,
       quantity,
       inchesAdded,
       date: new Date().toISOString(),
     };
 
     setLogEntries((current) => [...current, newEntry]);
+  }
+
+  function addCustomHotDog(
+    name: string,
+    length_inches: number
+  ) {
+    const newDog: CustomHotDog = {
+      id: Date.now().toString(),
+      name,
+      length_inches,
+    };
+
+    setCustomHotDogs((current) => [
+      ...current,
+      newDog,
+    ]);
+  }
+
+  function deleteCustomHotDog(id: string) {
+    setCustomHotDogs((current) =>
+      current.filter((dog) => dog.id !== id)
+    );
   }
 
   function deleteLogEntry(id: string) {
@@ -153,7 +222,7 @@ useEffect(() => {
     }
 
     setTotalInches(
-      (current) => current - entry.inchesAdded
+      (current) => Math.max(0, current - entry.inchesAdded)
     );
 
     setLogEntries(
@@ -162,7 +231,11 @@ useEffect(() => {
           (item) => item.id !== id
         )
       );
-}
+  }
+
+  function setStartingDistance(inches: number) {
+    setTotalInches(inches);
+  }
 
   return (
     <AppContext.Provider
@@ -175,6 +248,10 @@ useEffect(() => {
         logEntries,
         addHotDogs,
         deleteLogEntry,
+        customHotDogs,
+        addCustomHotDog,
+        deleteCustomHotDog,
+        setStartingDistance,
       }}
     >
       {children}

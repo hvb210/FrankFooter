@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
 import { useApp } from "@/context/AppContext";
 import { hotdogs } from "@/data/hotdogs";
 
@@ -6,7 +6,10 @@ export default function HistoryScreen() {
   const { logEntries, deleteLogEntry } = useApp();
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      style={{ width: "100%" }}>
+
       <Text style={styles.title}>
         Hot Dog History
       </Text>
@@ -16,7 +19,7 @@ export default function HistoryScreen() {
           No hot dogs logged yet.
         </Text>
       ) : (
-        logEntries.map((entry, index) => {
+        logEntries.map((entry) => {
           const product = hotdogs
             .flatMap((brand) => brand.products)
             .find(
@@ -29,7 +32,7 @@ export default function HistoryScreen() {
               style={styles.entry}
               >
               <Text style={styles.text}>
-                {entry.quantity} × {product?.name}
+                {entry.quantity} × {entry.productName ?? product?.name}
               </Text>
 
               <Text style={styles.distance}>
@@ -52,15 +55,17 @@ export default function HistoryScreen() {
           );
         })
       )}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-  },
+  alignItems: "center",
+  padding: 20,
+  paddingBottom: 40,
+  width: "100%",
+},
 
   title: {
     fontSize: 32,
@@ -79,6 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 15,
     backgroundColor: "#F5A623",
+    width: "90%",
   },
 
   text: {
@@ -97,10 +103,10 @@ const styles = StyleSheet.create({
   },
 
   deleteButton: {
-  marginTop: 10,
-  padding: 8,
-  borderRadius: 10,
-},
+    marginTop: 10,
+    padding: 8,
+    borderRadius: 10,
+  },
 
   deleteText: {
     fontSize: 14,
