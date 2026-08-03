@@ -4,7 +4,11 @@ import { AppProvider } from "@/context/AppContext";
 export default function RootLayout() {
   return (
     <AppProvider>
-      <Stack />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
     </AppProvider>
   );
 }
