@@ -4,7 +4,7 @@
     "slug": "the-long-dog",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/long_dog_icon.png",
     "scheme": "frankfooter",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -29,7 +29,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/long_dog_icon.png",
           "imageWidth": 76
         }
       ]
