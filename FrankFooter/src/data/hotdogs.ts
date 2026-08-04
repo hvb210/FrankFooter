@@ -49,5 +49,16 @@ export const hotdogs: Brand[] = [
       },
     ],
   },
+  {
+    id: 4,
+    name: "Costco",
+    products: [
+      {
+        id: 401,
+        name: "Foot Long",
+        length_inches: 12,
+      },
+    ],
+  },
 
 ];

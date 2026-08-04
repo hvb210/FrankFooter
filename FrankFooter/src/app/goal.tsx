@@ -71,7 +71,8 @@ export default function GoalScreen() {
 
             <TextInput
             style={styles.input}
-            placeholder="Enter feet"
+            placeholder="Custom goal (feet)"
+            placeholderTextColor="#999"
             keyboardType="numeric"
             value={customFeet}
             onChangeText={setCustomFeet}
@@ -84,7 +85,8 @@ export default function GoalScreen() {
 
           <TextInput
             style={styles.input}
-            placeholder="Starting feet"
+            placeholder="Total Feet Already Eaten"
+            placeholderTextColor="#999"
             keyboardType="numeric"
             value={startingFeet}
             onChangeText={setStartingFeet}
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     padding: 12,
     borderRadius: 10,
-    width: 200,
+    width: "100%",
     marginTop: 20,
     textAlign: "center",
     fontSize: 18,

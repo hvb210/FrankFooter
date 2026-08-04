@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Alert,
+  ScrollView } from "react-native";
 import { useApp } from "@/context/AppContext";
 import { useRouter } from "expo-router";
 import { landmarks } from "@/data/landmarks";
@@ -7,7 +13,7 @@ import { achievements } from "@/data/achievements";
 export default function DashboardScreen() {
   const router = useRouter();
 
-  const { totalInches, goalInches } = useApp();
+  const { totalInches, goalInches, resetAppData } = useApp();
 
   const safeTotalInches = Math.max(0, totalInches);
 
@@ -46,10 +52,29 @@ const badges = achievements.map((achievement) => ({
     landmarkRemainingInches % 12
   );
 
+  const handleReset = () => {
+  Alert.alert(
+    "Reset App Data?",
+    "This will erase your goal, hot dog logs, and progress. You will start over as a new user.",
+    [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Reset",
+        style: "destructive",
+        onPress: resetAppData,
+      },
+    ]
+  );
+};
+
+
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>
-        FrankFooter
+        The Long Dog
       </Text>
 
       <Text style={styles.label}>
@@ -116,7 +141,15 @@ const badges = achievements.map((achievement) => ({
         ))}
       </View>
 
-    </View>
+      <Pressable
+          style={styles.resetButton}
+          onPress={handleReset}
+        >
+          <Text style={styles.resetButtonText}>
+            Reset App Data
+          </Text>
+      </Pressable>
+    </ScrollView>
   );
 }
 
@@ -138,21 +171,31 @@ function AchievementBadge({
         !unlocked && styles.lockedBadge,
       ]}
     >
-      <Text style={styles.badgeIcon}>{icon}</Text>
-      <Text style={styles.badgeName}>{name}</Text>
-      <Text style={styles.badgeDescription}>
-        {unlocked ? description : "Locked"}
+      <Text style={styles.badgeIcon}>
+        {icon}
       </Text>
+
+      <Text style={styles.badgeName}>
+        {name}
+      </Text>
+
+      <Text style={styles.badgeDescription}>
+        {description}
+      </Text>
+
+      <Text style={styles.badgeStatus}>
+        {unlocked ? "✅" : "🔒"}
+      </Text>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     padding: 20,
+    paddingBottom: 40,
   },
 
   title: {
@@ -244,5 +287,18 @@ const styles = StyleSheet.create({
   badgeDescription: {
     fontSize: 10,
     textAlign: "center",
+  },
+
+  resetButton: {
+    marginTop: 40,
+    padding: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "red",
+  },
+
+  resetButtonText: {
+    color: "red",
+    fontWeight: "bold",
   },
 });

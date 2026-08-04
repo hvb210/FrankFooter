@@ -47,6 +47,8 @@ interface AppContextType {
   setStartingDistance: (
     inches: number
   ) => void;
+
+  resetAppData: () => Promise<void>;
 }
 
 
@@ -237,6 +239,16 @@ useEffect(() => {
     setTotalInches(inches);
   }
 
+  async function resetAppData() {
+    await AsyncStorage.clear();
+
+    setGoalInches(63360); // reset to 1 mile default
+    setGoalSet(false);
+    setTotalInches(0);
+    setLogEntries([]);
+    setCustomHotDogs([]);
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -252,6 +264,7 @@ useEffect(() => {
         addCustomHotDog,
         deleteCustomHotDog,
         setStartingDistance,
+        resetAppData,
       }}
     >
       {children}
