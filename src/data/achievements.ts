@@ -1,44 +1,52 @@
+const ketchup = require("@/assets/images/badges/ketchupq.png");
+const mustard = require("@/assets/images/badges/mustard.png");
+const relish = require("@/assets/images/badges/relish.png");
+const onion = require("@/assets/images/badges/onion.png");
+const chili = require("@/assets/images/badges/chili.png");
+const jalapeno = require("@/assets/images/badges/jalapeno.jpg");
+
+
 export const achievements = [
   {
-    id: "first_footstep",
-    name: "First Footstep",
+    id: "ketchup",
+    name: "Ketchup",
     description: "Complete your first landmark",
     threshold: 1,
-    icon: "👣",
+    icon: ketchup,
   },
   {
-    id: "getting_started",
-    name: "Getting Started",
+    id: "mustard",
+    name: "Mustard",
     description: "Complete 5 landmarks",
     threshold: 5,
-    icon: "🗺️",
+    icon: mustard,
   },
   {
-    id: "explorer",
-    name: "Explorer",
+    id: "relish",
+    name: "Relish",
     description: "Complete 10 landmarks",
     threshold: 10,
-    icon: "🧭",
+    icon: relish,
   },
   {
-    id: "trailblazer",
-    name: "Trailblazer",
+    id: "onion",
+    name: "Onion",
     description: "Complete 20 landmarks",
     threshold: 20,
-    icon: "🏔️",
+    icon: onion,
   },
   {
-    id: "adventurer",
-    name: "Adventurer",
+    id: "chili",
+    name: "Chili",
     description: "Complete 30 landmarks",
     threshold: 30,
-    icon: "🌎",
+    icon: chili,
   },
   {
-    id: "master_explorer",
-    name: "Master Explorer",
+    id: "jalapeno",
+    name: "Jalapeno",
     description: "Complete 40 landmarks",
     threshold: 40,
-    icon: "🏆",
+    icon: jalapeno,
   },
 ];

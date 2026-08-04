@@ -4,7 +4,8 @@ import {
   View,
   Pressable,
   Alert,
-  ScrollView } from "react-native";
+  ScrollView,
+  Image} from "react-native";
 import { useApp } from "@/context/AppContext";
 import { useRouter } from "expo-router";
 import { landmarks } from "@/data/landmarks";
@@ -161,7 +162,7 @@ function AchievementBadge({
 }: {
   name: string;
   description: string;
-  icon: string;
+  icon: any;
   unlocked: boolean;
 }) {
   return (
@@ -171,9 +172,10 @@ function AchievementBadge({
         !unlocked && styles.lockedBadge,
       ]}
     >
-      <Text style={styles.badgeIcon}>
-        {icon}
-      </Text>
+      <Image
+        source={icon}
+        style={styles.badgeIcon}
+        />
 
       <Text style={styles.badgeName}>
         {name}
@@ -275,7 +277,9 @@ const styles = StyleSheet.create({
   },
 
   badgeIcon: {
-    fontSize: 32,
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
   },
 
   badgeName: {
