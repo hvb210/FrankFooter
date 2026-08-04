@@ -1,56 +1,29 @@
-# Welcome to your Expo app 👋
+# The Long Dog 🌭
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The Long Dog is a mobile app built with React Native and Expo that lets users track the cumulative distance of hot dogs they've eaten. Whether your goal is one mile or a custom distance, the app turns every hot dog into progress toward a fun, long-term challenge.
 
-## Get started
+## Features
 
-1. Install dependencies
+* Log hot dogs from a built-in database of popular brands and products
+* Create and save custom hot dogs with your own lengths
+* Track progress toward a one-mile goal or a custom distance goal
+* View total distance eaten in feet and inches
+* Unlock milestones as you "travel" farther
+* Earn achievement badges for reaching landmark goals
+* Review and manage your hot dog history
 
-   ```bash
-   npm install
-   ```
+## Built With
 
-2. Start the app
+* React Native
+* Expo
+* TypeScript
+* Expo Router
+* AsyncStorage
 
-   ```bash
-   npx expo start
-   ```
+## Purpose
 
-In the output, you'll find options to open the app in a
+The Long Dog was created as a fun personal project to explore mobile app development while building an engaging, goal-based tracking experience. The project focuses on clean UI design, state management with React Context, persistent local storage, and intuitive navigation.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Status
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The app is currently under active development. Planned improvements include and expanded hot dog database.
